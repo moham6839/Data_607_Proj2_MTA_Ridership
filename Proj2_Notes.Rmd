@@ -1,0 +1,716 @@
+---
+title: "Proj2_Notes"
+author: "Mohamed Hassan-El Serafi"
+date: "2023-03-05"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Bus Ridership Totals
+
+###Overall Bus Ridership from 2020-2023
+
+
+```{r}
+Bus_Overall_Totals <- new_df2 %>%
+  select(Date, `Buses: Total Estimated Ridership`) %>%
+  group_by(Date) %>%
+  summarize(Bus_Ridership_Totals = sum(`Buses: Total Estimated Ridership`))
+  #arrange(desc(Subway_Ridership_Totals))
+
+knitr::kable(Subway_Overall_Totals, "pipe", align=c("l", "c"))
+```
+
+
+```{r}
+ggplot(Bus_Overall_Totals, aes(x=Date, y=Bus_Ridership_Totals)) +
+    geom_bar(stat='identity', position='dodge') +
+  theme_minimal() +
+  labs(title="Bus Ridership Totals",
+       y="Number of Bus Riders (in millions)",
+       x="Years (2020-2023)")
+```
+
+
+
+
+```{r}
+Buses_Daily_Totals <- new_df2 %>%
+  select(Day_of_Week, `Buses: Total Estimated Ridership`) %>%
+  group_by(Day_of_Week) %>%
+  summarize(Bus_Ridership_Totals = sum(`Buses: Total Estimated Ridership`))
+
+knitr::kable(Buses_Daily_Totals, "pipe", align=c("l", "c"))
+```
+
+```{r}
+ggplot(Buses_Daily_Totals, aes(x=reorder(Day_of_Week, -Bus_Ridership_Totals), y=Bus_Ridership_Totals)) +
+  geom_bar(stat='identity', position='dodge', width=0.7) +
+  theme_minimal()
+```
+
+
+## 2020
+
+
+```{r}
+Bus_Yearly_Totals_2020 <- new_df2 %>%
+  select(Date, Day_of_Week, `Buses: Total Estimated Ridership`) %>%
+  filter(between(Date, as.Date('2020-03-01'), as.Date('2020-12-31')))%>%
+  group_by(Date, Day_of_Week) %>%
+  summarize(Buses_Ridership_Totals = sum(`Buses: Total Estimated Ridership`))
+  #arrange(desc(Buses_Ridership_Totals))
+
+knitr::kable(Bus_Yearly_Totals_2020, "pipe", align=c("l", "c"))
+```
+
+
+```{r}
+ggplot(Bus_Yearly_Totals_2020, aes(x=Date, y=Buses_Ridership_Totals)) +
+    geom_bar(stat='identity', position='dodge') +
+  theme_minimal() +
+  labs(title="Bus Ridership Totals",
+       y="Number of Bus Riders (in millions)",
+       x="Months(2020)")
+```
+
+
+```{r}
+Bus_Daily_Totals_2020 <- new_df2 %>%
+  select(Date, Day_of_Week, `Buses: Total Estimated Ridership`) %>%
+  filter(between(Date, as.Date('2020-03-01'), as.Date('2020-12-31')))%>%
+  group_by(Day_of_Week) %>%
+  summarize(Buses_Ridership_Totals = sum(`Buses: Total Estimated Ridership`)) %>%
+  arrange(desc(Buses_Ridership_Totals))
+
+knitr::kable(Bus_Daily_Totals_2020, "pipe", align=c("l", "c"))
+```
+
+
+
+
+
+
+```{r}
+ggplot(Bus_Daily_Totals_2020, aes(x=reorder(Day_of_Week, -Buses_Ridership_Totals), y=Buses_Ridership_Totals)) +
+    geom_bar(stat='identity', position='dodge') +
+  theme_minimal() +
+  labs(title="Bus Ridership Totals in 2020",
+       y="Number of Subway Riders (in 10 millions)",
+       x="Months(2020)")
+```
+
+
+
+## 2021
+
+
+```{r}
+Bus_Yearly_Totals_2021 <- new_df2 %>%
+  select(Date, Day_of_Week, `Buses: Total Estimated Ridership`) %>%
+  filter(between(Date, as.Date('2021-01-01'), as.Date('2021-12-31')))%>%
+  group_by(Date, Day_of_Week) %>%
+  summarize(Buses_Ridership_Totals = sum(`Buses: Total Estimated Ridership`))
+  #arrange(desc(Buses_Ridership_Totals))
+
+knitr::kable(Bus_Yearly_Totals_2021, "pipe", align=c("l", "c"))
+```
+
+
+```{r}
+ggplot(Bus_Yearly_Totals_2021, aes(x=Date, y=Buses_Ridership_Totals)) +
+    geom_bar(stat='identity', position='dodge') +
+  theme_minimal() +
+  labs(title="Bus Ridership Totals 2021",
+       y="Number of Bus Riders (in millions)",
+       x="Months(2021)")
+```
+
+
+```{r}
+Bus_Daily_Totals_2021 <- new_df2 %>%
+  select(Date, Day_of_Week, `Buses: Total Estimated Ridership`) %>%
+  filter(between(Date, as.Date('2021-01-01'), as.Date('2021-12-31')))%>%
+  group_by(Day_of_Week) %>%
+  summarize(Buses_Ridership_Totals = sum(`Buses: Total Estimated Ridership`)) %>%
+  arrange(desc(Buses_Ridership_Totals))
+
+knitr::kable(Bus_Daily_Totals_2021, "pipe", align=c("l", "c"))
+```
+
+
+```{r}
+ggplot(Bus_Daily_Totals_2021, aes(x=reorder(Day_of_Week, -Buses_Ridership_Totals), y=Buses_Ridership_Totals)) +
+    geom_bar(stat='identity', position='dodge') +
+  theme_minimal() +
+  labs(title="Bus Ridership Totals in 2021",
+       y="Number of Subway Riders (in 10 millions)",
+       x="Months(2021)")
+```
+
+
+## 2022
+
+```{r}
+Bus_Yearly_Totals_2022 <- new_df2 %>%
+  select(Date, Day_of_Week, `Buses: Total Estimated Ridership`) %>%
+  filter(between(Date, as.Date('2022-01-01'), as.Date('2022-12-31')))%>%
+  group_by(Date, Day_of_Week) %>%
+  summarize(Buses_Ridership_Totals = sum(`Buses: Total Estimated Ridership`))
+  #arrange(desc(Buses_Ridership_Totals))
+
+knitr::kable(Bus_Yearly_Totals_2022, "pipe", align=c("l", "c"))
+```
+
+```{r}
+ggplot(Bus_Yearly_Totals_2022, aes(x=Date, y=Buses_Ridership_Totals)) +
+    geom_bar(stat='identity', position='dodge') +
+  theme_minimal() +
+  labs(title="Bus Ridership Totals 2022",
+       y="Number of Bus Riders (in millions)",
+       x="Months(2022)")
+```
+
+```{r}
+Bus_Daily_Totals_2022 <- new_df2 %>%
+  select(Date, Day_of_Week, `Buses: Total Estimated Ridership`) %>%
+  filter(between(Date, as.Date('2022-01-01'), as.Date('2022-12-31')))%>%
+  group_by(Day_of_Week) %>%
+  summarize(Buses_Ridership_Totals = sum(`Buses: Total Estimated Ridership`)) %>%
+  arrange(desc(Buses_Ridership_Totals))
+
+knitr::kable(Bus_Daily_Totals_2022, "pipe", align=c("l", "c"))
+```
+
+```{r}
+ggplot(Bus_Daily_Totals_2022, aes(x=reorder(Day_of_Week, -Buses_Ridership_Totals), y=Buses_Ridership_Totals)) +
+    geom_bar(stat='identity', position='dodge') +
+  theme_minimal() +
+  labs(title="Bus Ridership Totals in 2022",
+       y="Number of Subway Riders (in 10 millions)",
+       x="Months(2022)")
+```
+
+
+## 2023
+
+```{r}
+Bus_Yearly_Totals_2023 <- new_df2 %>%
+  select(Date, Day_of_Week, `Buses: Total Estimated Ridership`) %>%
+  filter(between(Date, as.Date('2023-01-01'), as.Date('2023-02-23')))%>%
+  group_by(Date, Day_of_Week) %>%
+  summarize(Buses_Ridership_Totals = sum(`Buses: Total Estimated Ridership`))
+  #arrange(desc(Buses_Ridership_Totals))
+
+knitr::kable(Bus_Yearly_Totals_2023, "pipe", align=c("l", "c"))
+```
+
+```{r}
+ggplot(Bus_Yearly_Totals_2023, aes(x=Date, y=Buses_Ridership_Totals)) +
+    geom_bar(stat='identity', position='dodge') +
+  theme_minimal() +
+  labs(title="Bus Ridership Totals 2023",
+       y="Number of Bus Riders (in millions)",
+       x="Months(2023)")
+```
+
+
+```{r}
+Bus_Daily_Totals_2023 <- new_df2 %>%
+  select(Date, Day_of_Week, `Buses: Total Estimated Ridership`) %>%
+  filter(between(Date, as.Date('2022-01-01'), as.Date('2022-12-31')))%>%
+  group_by(Day_of_Week) %>%
+  summarize(Buses_Ridership_Totals = sum(`Buses: Total Estimated Ridership`)) %>%
+  arrange(desc(Buses_Ridership_Totals))
+
+knitr::kable(Bus_Daily_Totals_2023, "pipe", align=c("l", "c"))
+```
+
+```{r}
+ggplot(Bus_Daily_Totals_2023, aes(x=reorder(Day_of_Week, -Buses_Ridership_Totals), y=Buses_Ridership_Totals)) +
+    geom_bar(stat='identity', position='dodge') +
+  theme_minimal() +
+  labs(title="Bus Ridership Totals in 2023",
+       y="Number of Subway Riders (in 10 millions)",
+       x="Months(2023)")
+```
+
+
+
+## LIRR Ridership Totals
+
+### Overall LIRR Ridership Totals 2020-2023
+
+```{r}
+LIRR_Overall_Totals <- new_df2 %>%
+  select(Date, `LIRR: Total Estimated Ridership`) %>%
+  group_by(Date) %>%
+  summarize(LIRR_Ridership_Totals = sum(`LIRR: Total Estimated Ridership`))
+  #arrange(desc(LIRR_Ridership_Totals))
+
+knitr::kable(LIRR_Overall_Totals, "pipe", align=c("l", "c"))
+```
+
+
+```{r}
+ggplot(LIRR_Overall_Totals, aes(x=Date, y=LIRR_Ridership_Totals)) +
+    geom_bar(stat='identity', position='dodge') +
+  theme_minimal() +
+  labs(title="LIRR Ridership Totals",
+       y="Number of LIRR Riders (in millions)",
+       x="Years (2020-2023)")
+```
+
+
+
+
+```{r}
+LIRR_Overall_Totals <- new_df2 %>%
+  select(Day_of_Week, `LIRR: Total Estimated Ridership`) %>%
+  group_by(Day_of_Week) %>%
+  summarize(LIRR_Ridership_Totals = sum(`LIRR: Total Estimated Ridership`, na.rm=TRUE))
+
+knitr::kable(LIRR_Overall_Totals, "pipe", align=c("l", "c"))
+```
+
+
+
+
+```{r}
+ggplot(LIRR_Overall_Totals, aes(x=reorder(Day_of_Week,-LIRR_Ridership_Totals), y=LIRR_Ridership_Totals)) +
+  geom_bar(stat='identity', position='dodge', width=0.7) +
+  theme_minimal()
+```
+
+
+
+## 2020
+
+
+```{r}
+LIRR_Yearly_Totals_2020 <- new_df2 %>%
+  select(Date, Day_of_Week, `LIRR: Total Estimated Ridership`) %>%
+  filter(between(Date, as.Date('2020-03-01'), as.Date('2020-12-31')))%>%
+  group_by(Date, Day_of_Week) %>%
+  summarize(LIRR_Ridership_Totals = sum(`LIRR: Total Estimated Ridership`, na.rm=TRUE))
+  #arrange(desc(Buses_Ridership_Totals))
+
+knitr::kable(LIRR_Yearly_Totals_2020, "pipe", align=c("l", "c"))
+```
+
+
+```{r}
+ggplot(LIRR_Yearly_Totals_2020, aes(x=Date, y=LIRR_Ridership_Totals)) +
+    geom_bar(stat='identity', position='dodge') +
+  theme_minimal() +
+  labs(title="LIRR Ridership Totals in 2020",
+       y="Number of LIRR Riders (in millions)",
+       x="Months(2020)")
+```
+
+
+```{r}
+LIRR_Daily_Totals_2020 <- new_df2 %>%
+  select(Date, Day_of_Week, `LIRR: Total Estimated Ridership`) %>%
+  filter(between(Date, as.Date('2020-03-01'), as.Date('2020-12-31')))%>%
+  group_by(Day_of_Week) %>%
+  summarize(LIRR_Ridership_Totals = sum(`LIRR: Total Estimated Ridership`, na.rm=TRUE)) %>%
+  arrange(desc(LIRR_Ridership_Totals))
+
+knitr::kable(LIRR_Daily_Totals_2020, "pipe", align=c("l", "c"))
+```
+
+
+
+
+
+
+```{r}
+ggplot(LIRR_Daily_Totals_2020, aes(x=reorder(Day_of_Week, -LIRR_Ridership_Totals), y=LIRR_Ridership_Totals)) +
+    geom_bar(stat='identity', position='dodge') +
+  theme_minimal() +
+  labs(title="LIRR Daily Ridership Totals in 2020",
+       y="Number of LIRR Riders (in 10 millions)",
+       x="Months(2020)")
+```
+
+
+
+## 2021
+
+
+```{r}
+LIRR_Yearly_Totals_2021 <- new_df2 %>%
+  select(Date, Day_of_Week, `LIRR: Total Estimated Ridership`) %>%
+  filter(between(Date, as.Date('2021-01-01'), as.Date('2021-12-31')))%>%
+  group_by(Date, Day_of_Week) %>%
+  summarize(LIRR_Ridership_Totals = sum(`LIRR: Total Estimated Ridership`, na.rm=TRUE))
+  #arrange(desc(LIRR_Ridership_Totals))
+
+knitr::kable(LIRR_Yearly_Totals_2021, "pipe", align=c("l", "c"))
+```
+
+
+```{r}
+ggplot(LIRR_Yearly_Totals_2020, aes(x=Date, y=LIRR_Ridership_Totals)) +
+    geom_bar(stat='identity', position='dodge') +
+  theme_minimal() +
+  labs(title="LIRR Ridership Totals",
+       y="Number of LIRR Riders (in millions)",
+       x="Months(2020)")
+```
+
+
+```{r}
+LIRR_Daily_Totals_2021 <- new_df2 %>%
+  select(Date, Day_of_Week, `LIRR: Total Estimated Ridership`) %>%
+  filter(between(Date, as.Date('2021-01-01'), as.Date('2021-12-31')))%>%
+  group_by(Day_of_Week) %>%
+  summarize(LIRR_Ridership_Totals = sum(`LIRR: Total Estimated Ridership`, na.rm=TRUE)) %>%
+  arrange(desc(LIRR_Ridership_Totals))
+
+knitr::kable(LIRR_Daily_Totals_2021, "pipe", align=c("l", "c"))
+```
+
+
+```{r}
+ggplot(LIRR_Daily_Totals_2020, aes(x=reorder(Day_of_Week, -LIRR_Ridership_Totals), y=LIRR_Ridership_Totals)) +
+    geom_bar(stat='identity', position='dodge') +
+  theme_minimal() +
+  labs(title="LIRR Ridership Totals in 2021",
+       y="Number of LIRR Riders (in 10 millions)",
+       x="Months(2021)")
+```
+
+
+## 2022
+
+```{r}
+LIRR_Yearly_Totals_2022 <- new_df2 %>%
+  select(Date, Day_of_Week, `LIRR: Total Estimated Ridership`) %>%
+  filter(between(Date, as.Date('2022-01-01'), as.Date('2022-12-31')))%>%
+  group_by(Date, Day_of_Week) %>%
+  summarize(LIRR_Ridership_Totals = sum(`LIRR: Total Estimated Ridership`, na.rm=TRUE))
+  #arrange(desc(Buses_Ridership_Totals))
+
+knitr::kable(LIRR_Yearly_Totals_2022, "pipe", align=c("l", "c"))
+```
+
+```{r}
+ggplot(LIRR_Yearly_Totals_2022, aes(x=Date, y=LIRR_Ridership_Totals)) +
+    geom_bar(stat='identity', position='dodge') +
+  theme_minimal() +
+  labs(title="LIRR Ridership Totals 2022",
+       y="Number of LIRR Riders (in millions)",
+       x="Months(2022)")
+```
+
+```{r}
+LIRR_Daily_Totals_2022 <- new_df2 %>%
+  select(Date, Day_of_Week, `LIRR: Total Estimated Ridership`) %>%
+  filter(between(Date, as.Date('2022-01-01'), as.Date('2022-12-31')))%>%
+  group_by(Day_of_Week) %>%
+  summarize(LIRR_Ridership_Totals = sum(`LIRR: Total Estimated Ridership`, na.rm=TRUE)) %>%
+  arrange(desc(LIRR_Ridership_Totals))
+
+knitr::kable(LIRR_Daily_Totals_2022, "pipe", align=c("l", "c"))
+```
+
+```{r}
+ggplot(LIRR_Daily_Totals_2022, aes(x=reorder(Day_of_Week, -LIRR_Ridership_Totals), y=LIRR_Ridership_Totals)) +
+    geom_bar(stat='identity', position='dodge') +
+  theme_minimal() +
+  labs(title="LIRR Ridership Totals in 2022",
+       y="Number of LIRR Riders (in 10 millions)",
+       x="Months(2022)")
+```
+
+
+## 2023
+
+```{r}
+LIRR_Yearly_Totals_2023 <- new_df2 %>%
+  select(Date, Day_of_Week, `LIRR: Total Estimated Ridership`) %>%
+  filter(between(Date, as.Date('2023-01-01'), as.Date('2023-02-23')))%>%
+  group_by(Date, Day_of_Week) %>%
+  summarize(LIRR_Ridership_Totals = sum(`LIRR: Total Estimated Ridership`, na.rm=TRUE))
+  #arrange(desc(LIRR_Ridership_Totals))
+
+knitr::kable(LIRR_Yearly_Totals_2023, "pipe", align=c("l", "c"))
+```
+
+```{r}
+ggplot(LIRR_Yearly_Totals_2023, aes(x=Date, y=LIRR_Ridership_Totals)) +
+    geom_bar(stat='identity', position='dodge') +
+  theme_minimal() +
+  labs(title="LIRR Ridership Totals 2023",
+       y="Number of LIRR Riders (in millions)",
+       x="Months(2023)")
+```
+
+
+```{r}
+LIRR_Daily_Totals_2023 <- new_df2 %>%
+  select(Date, Day_of_Week, `LIRR: Total Estimated Ridership`) %>%
+  filter(between(Date, as.Date('2022-01-01'), as.Date('2022-12-31')))%>%
+  group_by(Day_of_Week) %>%
+  summarize(LIRR_Ridership_Totals = sum(`LIRR: Total Estimated Ridership`, na.rm=TRUE)) %>%
+  arrange(desc(LIRR_Ridership_Totals))
+
+knitr::kable(LIRR_Daily_Totals_2023, "pipe", align=c("l", "c"))
+```
+
+```{r}
+ggplot(LIRR_Daily_Totals_2023, aes(x=reorder(Day_of_Week, -LIRR_Ridership_Totals), y=LIRR_Ridership_Totals)) +
+    geom_bar(stat='identity', position='dodge') +
+  theme_minimal() +
+  labs(title="LIRR Ridership Totals in 2023",
+       y="Number of LIRR Riders (in 10 millions)",
+       x="Months(2023)")
+```
+
+
+
+
+## MetroNorth Ridership Totals
+
+### Overall MetroNorth Totals 2020-2023
+
+```{r}
+MetroNorth_Overall_Totals <- new_df2 %>%
+  select(Date, `Metro-North: Total Estimated Ridership`) %>%
+  group_by(Date) %>%
+  summarize(MetroNorth_Ridership_Totals = sum(`Metro-North: Total Estimated Ridership`))
+  #arrange(desc(Subway_Ridership_Totals))
+
+knitr::kable(MetroNorth_Overall_Totals, "pipe", align=c("l", "c"))
+```
+
+
+```{r}
+ggplot(MetroNorth_Overall_Totals, aes(x=Date, y=MetroNorth_Ridership_Totals)) +
+    geom_bar(stat='identity', position='dodge') +
+  theme_minimal() +
+  labs(title="MetroNorth Ridership Totals",
+       y="Number of MetroNorth Riders (in millions)",
+       x="Years (2020-2023)")
+```
+
+
+
+
+
+
+
+
+
+```{r}
+MetroNorth_Overall_Totals <- new_df2 %>%
+  select(Day_of_Week, `Metro-North: Total Estimated Ridership`) %>%
+  group_by(Day_of_Week) %>%
+  summarize(MetroNorth_Ridership_Totals = sum(`Metro-North: Total Estimated Ridership`, na.rm=TRUE))
+
+knitr::kable(MetroNorth_Overall_Totals, "pipe", align=c("l", "c"))
+```
+
+```{r}
+ggplot(MetroNorth_Overall_Totals,aes(x=reorder(Day_of_Week,-MetroNorth_Ridership_Totals), y=MetroNorth_Ridership_Totals)) +
+  geom_bar(stat='identity', position='dodge', width=0.7) +
+  ggtitle("Metro-North Ridership") +
+  xlab("Days of the Week") +
+  ylab("Number of Commuters(In Millions)")
+  theme_minimal()
+```
+
+
+
+
+## 2020
+
+
+```{r}
+MetroNorth_Yearly_Totals_2020 <- new_df2 %>%
+  select(Date, Day_of_Week, `Metro-North: Total Estimated Ridership`) %>%
+  filter(between(Date, as.Date('2020-03-01'), as.Date('2020-12-31')))%>%
+  group_by(Date, Day_of_Week) %>%
+  summarize(MetroNorth_Ridership_Totals = sum(`Metro-North: Total Estimated Ridership`, na.rm=TRUE))
+  #arrange(desc(MetroNorth_Ridership_Totals))
+
+knitr::kable(MetroNorth_Yearly_Totals_2020, "pipe", align=c("l", "c"))
+```
+
+
+```{r}
+ggplot(MetroNorth_Yearly_Totals_2020, aes(x=Date, y=MetroNorth_Ridership_Totals)) +
+    geom_bar(stat='identity', position='dodge') +
+  theme_minimal() +
+  labs(title="MetroNorth Ridership Totals in 2020",
+       y="Number of MetroNorth Riders (in millions)",
+       x="Months(2020)")
+```
+
+
+```{r}
+MetroNorth_Daily_Totals_2020 <- new_df2 %>%
+  select(Date, Day_of_Week, `Metro-North: Total Estimated Ridership`) %>%
+  filter(between(Date, as.Date('2020-03-01'), as.Date('2020-12-31')))%>%
+  group_by(Day_of_Week) %>%
+  summarize(MetroNorth_Ridership_Totals = sum(`Metro-North: Total Estimated Ridership`, na.rm=TRUE)) %>%
+  arrange(desc(MetroNorth_Ridership_Totals))
+
+knitr::kable(MetroNorth_Daily_Totals_2020, "pipe", align=c("l", "c"))
+```
+
+
+
+
+
+
+```{r}
+ggplot(MetroNorth_Daily_Totals_2020, aes(x=reorder(Day_of_Week, -MetroNorth_Ridership_Totals), y=MetroNorth_Ridership_Totals)) +
+    geom_bar(stat='identity', position='dodge') +
+  theme_minimal() +
+  labs(title="MetroNorth Daily Ridership Totals in 2020",
+       y="Number of MetroNorth Riders (in 10 millions)",
+       x="Months(2020)")
+```
+
+
+
+## 2021
+
+
+```{r}
+MetroNorth_Yearly_Totals_2021 <- new_df2 %>%
+  select(Date, Day_of_Week, `Metro-North: Total Estimated Ridership`) %>%
+  filter(between(Date, as.Date('2021-01-01'), as.Date('2021-12-31')))%>%
+  group_by(Date, Day_of_Week) %>%
+  summarize(LIRR_Ridership_Totals = sum(`Metro-North: Total Estimated Ridership`, na.rm=TRUE))
+  #arrange(desc(MetroNorth_Ridership_Totals))
+
+knitr::kable(MetroNorth_Yearly_Totals_2021, "pipe", align=c("l", "c"))
+```
+
+
+```{r}
+ggplot(MetroNorth_Yearly_Totals_2020, aes(x=Date, y=MetroNorth_Ridership_Totals)) +
+    geom_bar(stat='identity', position='dodge') +
+  theme_minimal() +
+  labs(title="MetroNorth Ridership Totals",
+       y="Number of MetroNorth Riders (in millions)",
+       x="Months(2021)")
+```
+
+
+```{r}
+MetroNorth_Daily_Totals_2021 <- new_df2 %>%
+  select(Date, Day_of_Week, `Metro-North: Total Estimated Ridership`) %>%
+  filter(between(Date, as.Date('2021-01-01'), as.Date('2021-12-31')))%>%
+  group_by(Day_of_Week) %>%
+  summarize(MetroNorth_Ridership_Totals = sum(`Metro-North: Total Estimated Ridership`, na.rm=TRUE)) %>%
+  arrange(desc(MetroNorth_Ridership_Totals))
+
+knitr::kable(MetroNorth_Daily_Totals_2021, "pipe", align=c("l", "c"))
+```
+
+
+```{r}
+ggplot(MetroNorth_Daily_Totals_2021, aes(x=reorder(Day_of_Week, -MetroNorth_Ridership_Totals), y=MetroNorth_Ridership_Totals)) +
+    geom_bar(stat='identity', position='dodge') +
+  theme_minimal() +
+  labs(title="MetroNorth Ridership Totals in 2021",
+       y="Number of MetroNorth Riders (in 10 millions)",
+       x="Months(2021)")
+```
+
+
+## 2022
+
+```{r}
+MetroNorth_Yearly_Totals_2022 <- new_df2 %>%
+  select(Date, Day_of_Week, `Metro-North: Total Estimated Ridership`) %>%
+  filter(between(Date, as.Date('2022-01-01'), as.Date('2022-12-31')))%>%
+  group_by(Date, Day_of_Week) %>%
+  summarize(MetroNorth_Ridership_Totals = sum(`Metro-North: Total Estimated Ridership`, na.rm=TRUE))
+  #arrange(desc(MetroNorth_Ridership_Totals))
+
+knitr::kable(MetroNorth_Yearly_Totals_2022, "pipe", align=c("l", "c"))
+```
+
+```{r}
+ggplot(MetroNorth_Yearly_Totals_2022, aes(x=Date, y=MetroNorth_Ridership_Totals)) +
+    geom_bar(stat='identity', position='dodge') +
+  theme_minimal() +
+  labs(title="MetroNorth Ridership Totals 2022",
+       y="Number of MetroNorth Riders (in millions)",
+       x="Months(2022)")
+```
+
+```{r}
+MetroNorth_Daily_Totals_2022 <- new_df2 %>%
+  select(Date, Day_of_Week, `Metro-North: Total Estimated Ridership`) %>%
+  filter(between(Date, as.Date('2022-01-01'), as.Date('2022-12-31')))%>%
+  group_by(Day_of_Week) %>%
+  summarize(MetroNorth_Ridership_Totals = sum(`Metro-North: Total Estimated Ridership`, na.rm=TRUE)) %>%
+  arrange(desc(MetroNorth_Ridership_Totals))
+
+knitr::kable(MetroNorth_Daily_Totals_2022, "pipe", align=c("l", "c"))
+```
+
+```{r}
+ggplot(MetroNorth_Daily_Totals_2022, aes(x=reorder(Day_of_Week, -MetroNorth_Ridership_Totals), y=MetroNorth_Ridership_Totals)) +
+    geom_bar(stat='identity', position='dodge') +
+  theme_minimal() +
+  labs(title="MetroNorth Ridership Totals in 2022",
+       y="Number of MetroNorth Riders (in 10 millions)",
+       x="Months(2022)")
+```
+
+
+## 2023
+
+```{r}
+MetroNorth_Yearly_Totals_2023 <- new_df2 %>%
+  select(Date, Day_of_Week, `Metro-North: Total Estimated Ridership`) %>%
+  filter(between(Date, as.Date('2023-01-01'), as.Date('2023-02-23')))%>%
+  group_by(Date, Day_of_Week) %>%
+  summarize(MetroNorth_Ridership_Totals = sum(`Metro-North: Total Estimated Ridership`, na.rm=TRUE))
+  #arrange(desc(MetroNorth_Ridership_Totals))
+
+knitr::kable(MetroNorth_Yearly_Totals_2023, "pipe", align=c("l", "c"))
+```
+
+```{r}
+ggplot(MetroNorth_Yearly_Totals_2023, aes(x=Date, y=MetroNorth_Ridership_Totals)) +
+    geom_bar(stat='identity', position='dodge') +
+  theme_minimal() +
+  labs(title="MetroNorth Ridership Totals 2023",
+       y="Number of MetroNorth Riders (in millions)",
+       x="Months(2023)")
+```
+
+
+```{r}
+MetroNorth_Daily_Totals_2023 <- new_df2 %>%
+  select(Date, Day_of_Week, `Metro-North: Total Estimated Ridership`) %>%
+  filter(between(Date, as.Date('2022-01-01'), as.Date('2022-12-31')))%>%
+  group_by(Day_of_Week) %>%
+  summarize(MetroNorth_Ridership_Totals = sum(`Metro-North: Total Estimated Ridership`, na.rm=TRUE)) %>%
+  arrange(desc(MetroNorth_Ridership_Totals))
+
+knitr::kable(MetroNorth_Daily_Totals_2023, "pipe", align=c("l", "c"))
+```
+
+```{r}
+ggplot(MetroNorth_Daily_Totals_2023, aes(x=reorder(Day_of_Week, -MetroNorth_Ridership_Totals), y=MetroNorth_Ridership_Totals)) +
+    geom_bar(stat='identity', position='dodge') +
+  theme_minimal() +
+  labs(title="MetroNorth Ridership Totals in 2023",
+       y="Number of MetroNorth Riders (in 10 millions)",
+       x="Months(2023)")
+```
+
+

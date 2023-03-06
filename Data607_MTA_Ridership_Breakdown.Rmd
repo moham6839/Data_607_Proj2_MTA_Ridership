@@ -1,0 +1,387 @@
+---
+title: "Daily MTA Ridership Data"
+author: "Mohamed Hassan-El Serafi"
+date: "2023-03-05"
+output: html_document
+---
+
+Since the Covid-19 pandemic began in March 2020, the mass transit system in New York has struggled to maintain the same levels of ridership from pre-pandemic levels. Recently, the MTA has proposed cutting subway service on Fridays and Mondays, arguing that there are less commuters on those days than the other three days during the workweek. For purposes of this analysis, I will focus on the daily  amount of riders on the subway, as well as the year-to-year trajectory of subway ridership. This dataset was downloaded from the New York State Data website, and starts from March 1, 2020 until the last date data was collected, February 23, 2023.
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r include=FALSE}
+library(tidyverse)
+library(lubridate)
+library(RCurl)
+```
+
+
+# Exploring MTA Mass Transit Daily Ridership 
+
+Using the MTA dataset, I focused on the the number of estimates commuters based on the day of the week. 
+
+
+```{r}
+df <- read.csv("https://raw.githubusercontent.com/moham6839/Data_607_Proj2_MTA_Ridership/main/MTA_Daily_Ridership_Data__Beginning_2020.csv", check.names=FALSE)
+df
+```
+
+
+```{r}
+glimpse(df)
+```
+
+
+# Identifying Missing Values
+
+I identified 4 NA values in the dataset. The was 1 missing value each in 4 of the columns pertaining to Total Estimated Ridership and % of 2019 Monthly Weekday/Saturday/Sunday Average for the LIRR and MetroNorth. 
+
+
+
+
+```{r}
+sum(is.na(df))
+which(is.na(df))
+```
+
+
+
+```{r}
+apply(is.na(df), 2, which)
+```
+
+
+
+```{r}
+df[540, ]
+```
+
+
+
+
+```{r}
+df[1090, ]
+```
+
+
+
+
+
+
+
+## Converting Dates to Day of the Week
+
+In order to identify the day of the week corresponding to the date, I converted the Date column into month/date/year (mdy) column.
+
+
+```{r}
+df$Date <- mdy(df$Date)
+```
+
+
+
+
+
+```{r}
+new_df <- df
+new_df$Day_of_Week <- weekdays(new_df$Date)                
+new_df
+```
+
+
+
+
+```{r}
+new_df <- new_df
+new_df$Day_of_Week <- weekdays(new_df$Date)                
+new_df
+```
+
+With the day of the week identified, I relocated the column to the left of the Date column.
+
+```{r}
+new_df2 <- new_df %>%
+  relocate(Day_of_Week)
+```
+
+
+```{r}
+knitr:: kable(new_df2, "pipe", align=c("l", "c", "c"))
+```
+
+
+
+
+## Subway Ridership Totals
+
+I looked at the overall subway ridership from 2020-2023, as well as the amount of daily riders during this period:
+
+### Subway Overall Ridership Totals
+
+```{r}
+Subway_Overall_Totals <- new_df2 %>%
+  select(Date, `Subways: Total Estimated Ridership`) %>%
+  group_by(Date) %>%
+  summarize(Subway_Ridership_Totals = sum(`Subways: Total Estimated Ridership`))
+  #arrange(desc(Subway_Ridership_Totals))
+
+knitr::kable(Subway_Overall_Totals, "pipe", align=c("l", "c"))
+```
+
+```{r}
+ggplot(Subway_Overall_Totals, aes(x=Date, y=Subway_Ridership_Totals)) +
+    geom_bar(stat='identity', position='dodge') +
+  theme_minimal() +
+  labs(title="Subway Ridership Overall Totals",
+       y="Number of Subway Riders (in millions)",
+       x="Years (2020-2023)")
+```
+
+
+
+
+
+```{r}
+Subway_Daily_Totals <- new_df2 %>%
+  select(Day_of_Week, `Subways: Total Estimated Ridership`) %>%
+  group_by(Day_of_Week) %>%
+  summarize(Subway_Ridership_Totals = sum(`Subways: Total Estimated Ridership`)) %>%
+  arrange(desc(Subway_Ridership_Totals))
+
+knitr::kable(Subway_Daily_Totals, "pipe", align=c("l", "c"))
+```
+
+
+
+```{r}
+ggplot(Subway_Daily_Totals, aes(x=reorder(Day_of_Week, -Subway_Ridership_Totals), y=Subway_Ridership_Totals)) +
+    geom_bar(stat='identity', position='dodge', width=0.7) +
+  theme_minimal() +
+  labs(title="Subway Ridership Totals",
+       y="Number of Subway Riders (in 100 millions)",
+       x="Day of the Week")
+```
+
+
+
+## Subway Ridership Year to Year Breakdown
+
+I wanted to get a closer look at each year in the dataset. While understanding that two of the years, 2020 and 2023, do not contain a full year's worth of ridership data, there are trends and patterns that can be identified in those years.
+
+## 2020
+
+
+
+```{r}
+Subway_Yearly_Totals_2020 <- new_df2 %>%
+  select(Date, Day_of_Week, `Subways: Total Estimated Ridership`) %>%
+  filter(between(Date, as.Date('2020-03-01'), as.Date('2020-12-31')))%>%
+  group_by(Date, Day_of_Week) %>%
+  summarize(Subway_Ridership_Totals = sum(`Subways: Total Estimated Ridership`)) %>%
+  arrange(desc(Subway_Ridership_Totals))
+
+knitr::kable(Subway_Yearly_Totals_2020, "pipe", align=c("l", "c"))
+```
+
+
+```{r}
+ggplot(Subway_Yearly_Totals_2020, aes(x=Date, y=Subway_Ridership_Totals)) +
+    geom_bar(stat='identity', position='dodge') +
+  theme_minimal() +
+  labs(title="Subway Ridership Totals",
+       y="Number of Subway Riders (in millions)",
+       x="Months(2020)")
+```
+
+
+```{r}
+Subway_Daily_Totals_2020 <- new_df2 %>%
+  select(Date, Day_of_Week, `Subways: Total Estimated Ridership`) %>%
+  filter(between(Date, as.Date('2020-03-01'), as.Date('2020-12-31')))%>%
+  group_by(Day_of_Week) %>%
+  summarize(Subway_Ridership_Totals = sum(`Subways: Total Estimated Ridership`)) %>%
+  arrange(desc(Subway_Ridership_Totals))
+
+knitr::kable(Subway_Daily_Totals_2020, "pipe", align=c("l", "c"))
+```
+
+
+```{r}
+ggplot(Subway_Daily_Totals_2020, aes(x=reorder(Day_of_Week, -Subway_Ridership_Totals), y=Subway_Ridership_Totals)) +
+    geom_bar(stat='identity', position='dodge') +
+  theme_minimal() +
+  labs(title="Subway Ridership Totals 2020",
+       y="Number of Subway Riders (in 20 million)",
+       x="Month")
+```
+
+
+
+## 2021
+
+
+
+```{r}
+Subway_Yearly_Totals_2021 <- new_df2 %>%
+  select(Date, Day_of_Week, `Subways: Total Estimated Ridership`) %>%
+  filter(between(Date, as.Date('2021-01-01'), as.Date('2021-12-31')))%>%
+  group_by(Date, Day_of_Week) %>%
+  summarize(Subway_Ridership_Totals = sum(`Subways: Total Estimated Ridership`)) 
+  #arrange(desc(Subway_Ridership_Totals))
+
+knitr::kable(Subway_Yearly_Totals_2021, "pipe", align=c("l", "c"))
+```
+
+```{r}
+ggplot(Subway_Yearly_Totals_2021, aes(x=Date, y=Subway_Ridership_Totals)) +
+    geom_bar(stat='identity', position='dodge') +
+  theme_minimal() +
+  labs(title="Subway Ridership Totals in 2021",
+       y="Number of Subway Riders (in millions)",
+       x="Month")
+```
+
+```{r}
+Subway_Daily_Totals_2021 <- new_df2 %>%
+  select(Date, Day_of_Week, `Subways: Total Estimated Ridership`) %>%
+  filter(between(Date, as.Date('2021-01-01'), as.Date('2021-12-31')))%>%
+  group_by(Day_of_Week) %>%
+  summarize(Subway_Ridership_Totals = sum(`Subways: Total Estimated Ridership`)) %>%
+  arrange(desc(Subway_Ridership_Totals))
+
+knitr::kable(Subway_Daily_Totals_2021, "pipe", align=c("l", "c"))
+```
+
+```{r}
+ggplot(Subway_Daily_Totals_2021, aes(x=reorder(Day_of_Week, -Subway_Ridership_Totals), y=Subway_Ridership_Totals)) +
+    geom_bar(stat='identity', position='dodge') +
+  theme_minimal() +
+  labs(title="Subway 2021 Ridership Totals",
+       y="Number of Subway Riders (in 50 million)",
+       x="Months(2021)")
+```
+
+
+
+## 2022
+
+
+
+```{r}
+Subway_Yearly_Totals_2022 <- new_df2 %>%
+  select(Date, Day_of_Week, `Subways: Total Estimated Ridership`) %>%
+  filter(between(Date, as.Date('2022-01-01'), as.Date('2022-12-31')))%>%
+  group_by(Date, Day_of_Week) %>%
+  summarize(Subway_Ridership_Totals = sum(`Subways: Total Estimated Ridership`)) 
+  #arrange(desc(Subway_Ridership_Totals))
+
+knitr::kable(Subway_Yearly_Totals_2021, "pipe", align=c("l", "c"))
+```
+
+
+
+
+```{r}
+ggplot(Subway_Yearly_Totals_2022, aes(x=Date, y=Subway_Ridership_Totals)) +
+    geom_bar(stat='identity', position='dodge') +
+  theme_minimal() +
+  labs(title="Subway 2022 Ridership Totals",
+       y="Number of Subway Riders (in millions)",
+       x="Months(2022)")
+```
+
+
+```{r}
+Subway_Daily_Totals_2022 <- new_df2 %>%
+  select(Date, Day_of_Week, `Subways: Total Estimated Ridership`) %>%
+  filter(between(Date, as.Date('2022-01-01'), as.Date('2022-12-31')))%>%
+  group_by(Day_of_Week) %>%
+  summarize(Subway_Ridership_Totals = sum(`Subways: Total Estimated Ridership`)) %>%
+  arrange(desc(Subway_Ridership_Totals))
+
+knitr::kable(Subway_Daily_Totals_2021, "pipe", align=c("l", "c"))
+```
+
+
+
+
+
+```{r}
+ggplot(Subway_Daily_Totals_2022, aes(x=reorder(Day_of_Week, -Subway_Ridership_Totals), y=Subway_Ridership_Totals)) +
+    geom_bar(stat='identity', position='dodge') +
+  theme_minimal() +
+  labs(title="Subway 2022 Ridership Totals",
+       y="Number of Subway Riders (in 50 million)",
+       x="Months(2022)")
+```
+
+
+## 2023
+
+```{r}
+Subway_Yearly_Totals_2023 <- new_df2 %>%
+  select(Date, Day_of_Week, `Subways: Total Estimated Ridership`) %>%
+  filter(between(Date, as.Date('2023-01-01'), as.Date('2023-02-23')))%>%
+  group_by(Date, Day_of_Week) %>%
+  summarize(Subway_Ridership_Totals = sum(`Subways: Total Estimated Ridership`)) 
+  #arrange(desc(Subway_Ridership_Totals))
+
+knitr::kable(Subway_Yearly_Totals_2023, "pipe", align=c("l", "c"))
+```
+
+
+```{r}
+ggplot(Subway_Yearly_Totals_2023, aes(x=Date, y=Subway_Ridership_Totals)) +
+    geom_bar(stat='identity', position='dodge') +
+  theme_minimal() +
+  labs(title="Subway 2023 Ridership Totals",
+       y="Number of Subway Riders (in millions)",
+       x="Months(2023)")
+```
+
+
+```{r}
+Subway_Daily_Totals_2023 <- new_df2 %>%
+  select(Date, Day_of_Week, `Subways: Total Estimated Ridership`) %>%
+  filter(between(Date, as.Date('2023-01-01'), as.Date('2023-02-23')))%>%
+  group_by(Day_of_Week) %>%
+  summarize(Subway_Ridership_Totals = sum(`Subways: Total Estimated Ridership`)) %>%
+  arrange(desc(Subway_Ridership_Totals))
+
+knitr::kable(Subway_Daily_Totals_2023, "pipe", align=c("l", "c"))
+```
+
+
+
+
+```{r}
+ggplot(Subway_Daily_Totals_2023, aes(x=reorder(Day_of_Week, -Subway_Ridership_Totals), y=Subway_Ridership_Totals)) +
+    geom_bar(stat='identity', position='dodge') +
+  theme_minimal() +
+  labs(title="Subway Ridership Totals in 2023",
+       y="Number of Subway Riders (in 10 million)",
+       x="Months(2023)")
+```
+
+
+
+## Findings
+
+When examining the daily totals in each year, the pandemic severely depressed ridership. The level of ridership has not recovered to where it was during the first two weeks of March 2020, where over 5 million commuters were riding the subway. By the end of 2020, ridership was below 2 million. While there have been steady increases in ridership since 2020, the ability to work from home has contributed to the overall decline in ridership since its pre_pandemic peak. Based on the current data, ridership is on the edge of hitting 4 million riders, which is about a 1-1.5 million less than the peak reached in early March 2020 
+
+The overall days of the workweek show that Wednesday, Thursday, and Tuesday have the most subway riders, followed by Friday and Monday. In 2021, Fridays had the 2nd-most subway riders, trailing Wednesday by a close margin. The trend changed in 2022, as ridership declined on Fridays, falling behind Wednesday, Thursday, and Tuesday. So far in 2023, the decline of ridership on Fridays has continued, as ridership has lagged behind Wednesdays, Thursdays, and Tuesdays, and ahead of Mondays by only a small margin. These recent statistical trends could be a sign of things to come, as people continue to use the subway system infrequently, as the ability to work from home or attend school online becomes more widespread. 
+
+
+## Conclusion
+
+While cutting service on Fridays and Mondays would potentially extend the commute times for millions of people in New York, the number of riders over the last year has decreased on those days, in particular on Fridays. More studies can be done analyzing the reasons for the decline in ridership on those particular days, and seek solutions that will prevent longer wait times and commutes from occurring as a result of the service cuts.  
+
+
+
+
+
