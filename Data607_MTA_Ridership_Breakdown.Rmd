@@ -18,6 +18,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(lubridate)
 library(RCurl)
+library(DT)
 ```
 
 
@@ -28,7 +29,7 @@ Using the MTA dataset, I focused on the the number of estimates commuters based 
 
 ```{r}
 df <- read.csv("https://raw.githubusercontent.com/moham6839/Data_607_Proj2_MTA_Ridership/main/MTA_Daily_Ridership_Data__Beginning_2020.csv", check.names=FALSE)
-df
+DT::datatable(df)
 ```
 
 
@@ -90,7 +91,7 @@ df$Date <- mdy(df$Date)
 ```{r}
 new_df <- df
 new_df$Day_of_Week <- weekdays(new_df$Date)                
-new_df
+DT::datatable(new_df)
 ```
 
 
@@ -99,7 +100,7 @@ new_df
 ```{r}
 new_df <- new_df
 new_df$Day_of_Week <- weekdays(new_df$Date)                
-new_df
+DT::datatable(new_df)
 ```
 
 With the day of the week identified, I relocated the column to the left of the Date column.
@@ -111,7 +112,8 @@ new_df2 <- new_df %>%
 
 
 ```{r}
-knitr:: kable(new_df2, "pipe", align=c("l", "c", "c"))
+DT::datatable(new_df2)
+#knitr:: kable(new_df2, "pipe", align=c("l", "c", "c"))
 ```
 
 
@@ -130,7 +132,8 @@ Subway_Overall_Totals <- new_df2 %>%
   summarize(Subway_Ridership_Totals = sum(`Subways: Total Estimated Ridership`))
   #arrange(desc(Subway_Ridership_Totals))
 
-knitr::kable(Subway_Overall_Totals, "pipe", align=c("l", "c"))
+DT::datatable(Subway_Overall_Totals)
+#knitr::kable(Subway_Overall_Totals, "pipe", align=c("l", "c"))
 ```
 
 ```{r}
@@ -153,7 +156,8 @@ Subway_Daily_Totals <- new_df2 %>%
   summarize(Subway_Ridership_Totals = sum(`Subways: Total Estimated Ridership`)) %>%
   arrange(desc(Subway_Ridership_Totals))
 
-knitr::kable(Subway_Daily_Totals, "pipe", align=c("l", "c"))
+DT::datatable(Subway_Daily_Totals)
+#knitr::kable(Subway_Daily_Totals, "pipe", align=c("l", "c"))
 ```
 
 
@@ -185,7 +189,8 @@ Subway_Yearly_Totals_2020 <- new_df2 %>%
   summarize(Subway_Ridership_Totals = sum(`Subways: Total Estimated Ridership`)) %>%
   arrange(desc(Subway_Ridership_Totals))
 
-knitr::kable(Subway_Yearly_Totals_2020, "pipe", align=c("l", "c"))
+DT::datatable(Subway_Yearly_Totals_2020)
+#knitr::kable(Subway_Yearly_Totals_2020, "pipe", align=c("l", "c"))
 ```
 
 
@@ -207,7 +212,8 @@ Subway_Daily_Totals_2020 <- new_df2 %>%
   summarize(Subway_Ridership_Totals = sum(`Subways: Total Estimated Ridership`)) %>%
   arrange(desc(Subway_Ridership_Totals))
 
-knitr::kable(Subway_Daily_Totals_2020, "pipe", align=c("l", "c"))
+DT::datatable(Subway_Daily_Totals_2020)
+#knitr::kable(Subway_Daily_Totals_2020, "pipe", align=c("l", "c"))
 ```
 
 
@@ -234,7 +240,8 @@ Subway_Yearly_Totals_2021 <- new_df2 %>%
   summarize(Subway_Ridership_Totals = sum(`Subways: Total Estimated Ridership`)) 
   #arrange(desc(Subway_Ridership_Totals))
 
-knitr::kable(Subway_Yearly_Totals_2021, "pipe", align=c("l", "c"))
+DT::datatable(Subway_Yearly_Totals_2021)
+#knitr::kable(Subway_Yearly_Totals_2021, "pipe", align=c("l", "c"))
 ```
 
 ```{r}
@@ -254,7 +261,8 @@ Subway_Daily_Totals_2021 <- new_df2 %>%
   summarize(Subway_Ridership_Totals = sum(`Subways: Total Estimated Ridership`)) %>%
   arrange(desc(Subway_Ridership_Totals))
 
-knitr::kable(Subway_Daily_Totals_2021, "pipe", align=c("l", "c"))
+DT::datatable(Subway_Daily_Totals_2021)
+#knitr::kable(Subway_Daily_Totals_2021, "pipe", align=c("l", "c"))
 ```
 
 ```{r}
@@ -280,7 +288,8 @@ Subway_Yearly_Totals_2022 <- new_df2 %>%
   summarize(Subway_Ridership_Totals = sum(`Subways: Total Estimated Ridership`)) 
   #arrange(desc(Subway_Ridership_Totals))
 
-knitr::kable(Subway_Yearly_Totals_2021, "pipe", align=c("l", "c"))
+DT::datatable(Subway_Yearly_Totals_2022)
+#knitr::kable(Subway_Yearly_Totals_2021, "pipe", align=c("l", "c"))
 ```
 
 
@@ -304,7 +313,8 @@ Subway_Daily_Totals_2022 <- new_df2 %>%
   summarize(Subway_Ridership_Totals = sum(`Subways: Total Estimated Ridership`)) %>%
   arrange(desc(Subway_Ridership_Totals))
 
-knitr::kable(Subway_Daily_Totals_2021, "pipe", align=c("l", "c"))
+DT::datatable(Subway_Daily_Totals_2022)
+#knitr::kable(Subway_Daily_Totals_2021, "pipe", align=c("l", "c"))
 ```
 
 
@@ -331,7 +341,8 @@ Subway_Yearly_Totals_2023 <- new_df2 %>%
   summarize(Subway_Ridership_Totals = sum(`Subways: Total Estimated Ridership`)) 
   #arrange(desc(Subway_Ridership_Totals))
 
-knitr::kable(Subway_Yearly_Totals_2023, "pipe", align=c("l", "c"))
+DT::datatable(Subway_Yearly_Totals_2023)
+#knitr::kable(Subway_Yearly_Totals_2023, "pipe", align=c("l", "c"))
 ```
 
 
@@ -353,7 +364,8 @@ Subway_Daily_Totals_2023 <- new_df2 %>%
   summarize(Subway_Ridership_Totals = sum(`Subways: Total Estimated Ridership`)) %>%
   arrange(desc(Subway_Ridership_Totals))
 
-knitr::kable(Subway_Daily_Totals_2023, "pipe", align=c("l", "c"))
+DT::datatable(Subway_Daily_Totals_2023)
+#knitr::kable(Subway_Daily_Totals_2023, "pipe", align=c("l", "c"))
 ```
 
 
